@@ -1,7 +1,11 @@
 const { ApolloServer } = require('apollo-server');
-const typeDefs = require('./schema');
-const resolvers = require('./resolvers');
+const typeDefs = require('./schemas/schema');
+const resolvers = require('./resolvers/resolvers');
 require('dotenv').config();
+const connectDB = require('./db');
+
+connectDB();
+
 
 const server = new ApolloServer({
   typeDefs,
