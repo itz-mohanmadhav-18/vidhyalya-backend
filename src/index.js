@@ -1,17 +1,16 @@
-const { ApolloServer } = require('apollo-server');
-const typeDefs = require('./schemas/schema');
-const resolvers = require('./resolvers/resolvers');
-require('dotenv').config();
-const connectDB = require('./db');
-
+import { ApolloServer } from "apollo-server";
+import typeDefs from "./schemas/index.js";
+import resolvers from "./resolvers/index.js";
+import {connectDB} from "./db.js";
 connectDB();
-
-
+// Apollo Server Setup
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: true,
 });
 
-server.listen({ port: process.env.PORT }).then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
+// Start the Apollo server
+server.listen().then(({ url }) => {
+  console.log(`Server ready at ${url}`);
 });
