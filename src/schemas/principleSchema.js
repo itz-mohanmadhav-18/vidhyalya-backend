@@ -1,37 +1,59 @@
-import {ApolloServer,gql}  from "apollo-server";
+import {gql}  from "apollo-server";
 
 const principleDef = gql`
     
     type Principle {
-        id: ID!
+        EmployeeID: ID!
         name: String!
-        age: Int!
+        dob: String!
         contact: String!
+        email: String!
+        gender: String!
+        Qualifications: [String]!
+        Experience: Int!
         dateOfJoining: String!
+        password: String!
+    }
+    type Token{
+        token:String!
     }
     
     type Query {
         principles: [Principle]
-        principle(id: ID!): Principle
+        principle(EmployeeID: ID!): Principle
         
     }
     
     type Mutation {
         addPrinciple(input:PrincipleInput!): Principle
+        signInPrinciple(input:PrincipleSignInInput!): Token
         updatePrinciple(input:PrincipleUpdateInput!): Principle
-        deletePrinciple(id: ID!): Principle
+        deletePrinciple(employeeID: ID!): Principle
     }
     
     input PrincipleInput {
         name: String!
-        age: Int!
+        dob: String!
         contact: String!
+        email: String!
+        gender: String!
+        Qualifications: [String]!
+        Experience: Int!
+        dateOfJoining: String!
+        password: String!
     }
     
     input PrincipleUpdateInput {
-        name: String
-        age: Int
-        contact: String
+        name: String!
+        dob: String!
+        contact: String!
+        email: String!
+        Qualifications: [String]!
+        Experience: Int!
+    }
+    input PrincipleSignInInput {
+        EmployeeID: ID!
+        password: String!
     }
     
 `;

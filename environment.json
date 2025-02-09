@@ -1,3 +1,5 @@
 {
-  "Mongo": "mongodb://127.0.0.1:27017/SchoolDB"
+  "Mongo": "mongodb://127.0.0.1:27017/SchoolDB",
+  "JWT_SECRET": "HELLO WORLD I'm a secret",
+  "PORT": 3000
 }

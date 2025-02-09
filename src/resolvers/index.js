@@ -1,17 +1,17 @@
-import Principleresolvers from "./principleResolvers.js";
-import Teacherresolvers from "./teacherResolvers.js";
+import PrincipleResolvers from "./principleResolvers.js";
+import TeacherResolvers from "./teacherResolvers.js";
 
 const resolvers = {
     Query: {
-        ...Principleresolvers.Query,
-        ...Teacherresolvers.Query
+        ...PrincipleResolvers.Query,
+        ...TeacherResolvers.Query
     },
     Mutation: {
-        ...Principleresolvers.Mutation,
-        ...Teacherresolvers.Mutation
+        ...PrincipleResolvers.Mutation,
+        ...TeacherResolvers.Mutation
     },
     Principle: {
-        ...Principleresolvers.Principle,
+        ...PrincipleResolvers.Principle,
     }
 }
 
