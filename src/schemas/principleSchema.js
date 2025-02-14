@@ -9,7 +9,7 @@ const principleDef = gql`
         contact: String!
         email: String!
         gender: String!
-        Qualifications: [String]!
+        Qualifications: [String!]!
         Experience: Int!
         dateOfJoining: String!
         password: String!
@@ -19,7 +19,7 @@ const principleDef = gql`
     }
     
     type Query {
-        principles: [Principle]
+        principles: [Principle]!
         principle(EmployeeID: ID!): Principle
         
     }
@@ -44,12 +44,12 @@ const principleDef = gql`
     }
     
     input PrincipleUpdateInput {
-        name: String!
-        dob: String!
-        contact: String!
-        email: String!
-        Qualifications: [String]!
-        Experience: Int!
+        name: String
+        dob: String
+        contact: String
+        email: String
+        Qualifications: [String]
+        Experience: Int
     }
     input PrincipleSignInInput {
         EmployeeID: ID!

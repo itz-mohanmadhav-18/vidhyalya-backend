@@ -5,7 +5,14 @@ import logger from "../utils/logger.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import principleSchema from "../validations/principleInputValidation.js"
-dotenv.config();
+import {dirname, join} from "path";
+import {fileURLToPath} from "url";
+import PrincipleInputSignInSchema from '../validations/principleInputSignIn.js'
+import {limitRequest} from "../utils/rateLimitter.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: join(__dirname, '../../config.env') });
 
 const ID = new GenerateIDsAndRolls();
 
@@ -62,21 +69,49 @@ const PrincipleResolvers = {
             }
         },
         signInPrinciple: async (_, { input }) => {
-                const { EmployeeID, password } = input;
-                const principle = await Principle.findOne({ EmployeeID });
-                if (!principle) {
-                    throw new Error('Invalid credentials');
+                try{
+                    //validate input
+                    const {error} = PrincipleInputSignInSchema.validate(input);
+                    if(error){
+                        logger.warn(`Invalid input format for EmployeeID: ${input.EmployeeID}`)
+                        throw new Error(error.details[0].message)
+                    }
+
+                    const { EmployeeID, password } = input;
+                    await limitRequest(EmployeeID); // limiting requests to 5 every 15 minutes
+                    //check if entry exists in database
+                    const principle = await Principle.findOne({ EmployeeID });
+                    if (!principle) {
+                        logger.warn(`login failed - Invalid Employeeid ${EmployeeID}`);
+                        throw new Error('Invalid credentials');
+                    }
+                    // secure password comparison
+                    const isPasswordValid = await bcrypt.compare(password,principle.password);
+                    if (!isPasswordValid) {
+                        logger.warn(`login failed - Invalid Password for EmployeeID ${EmployeeID}`)
+                        throw new Error('Invalid credentials');
+                    }
+
+                    const token = jwt.sign(
+                        { EmployeeID },
+                        process.env.JWT_SECRET,
+                        { expiresIn: '1h',algorithm:'HS256' }
+                    );
+                    logger.info(`✅ Successful login: ${EmployeeID}`);
+                    return { token };
+                }catch (error){
+                    logger.error(`❌ Login error for ${input.EmployeeID || "Unknown ID"}: ${error.message}`);
+                    throw new Error(error.message);
                 }
-                const isPasswordValid = await bcrypt.compare(password, principle.password);
-                if (!isPasswordValid) {
-                    throw new Error('Invalid credentials');
-                }
-                const token = jwt.sign({ EmployeeID }, process.env.JWT_SECRET, { expiresIn: '1d' });
-                return { token };
         },
+        updatePrinciple: async (_, { input },ctx) => {
+            if(!ctx.isAuthenticated){
+                throw new Error("login to continue");
+            }
+            if(ctx.role !== 'principle'||ctx.role !== 'admin'){
+                throw new Error('Access Denied');
+            }
 
-
-        updatePrinciple: async (_, { input }) => {
             const updatedPrinciple = await Principle.findByIdAndUpdate(id,
                 { ...input },
                 { new: true });

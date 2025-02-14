@@ -8,3 +8,62 @@
 2025-02-09 17:35:37 [ERROR]: Error adding Principle: User already exists
 2025-02-09 17:35:51 [INFO]: Principle Mohan madhav Singhal added successfully
 2025-02-09 17:35:58 [ERROR]: Error adding Principle: "contact" with value "765845819" fails to match the required pattern: /^[0-9]{10}$/
+2025-02-09 17:57:41 [ERROR]: Error adding Principle: "contact" with value "765845819" fails to match the required pattern: /^[0-9]{10}$/
+2025-02-13 12:48:22 [WARN]: login failed - Invalid Employeeid 25030008
+2025-02-13 12:48:22 [ERROR]: ❌ Login error for 25030008: Invalid credentials
+2025-02-13 12:49:00 [ERROR]: Error adding Principle: "contact" with value "765245819" fails to match the required pattern: /^[0-9]{10}$/
+2025-02-13 12:49:10 [ERROR]: Error adding Principle: db already exists with different case already have: [SchoolDB] trying to create [schoolDB]
+2025-02-13 12:50:07 [ERROR]: Error adding Principle: db already exists with different case already have: [SchoolDB] trying to create [schoolDB]
+2025-02-13 12:50:08 [ERROR]: Error adding Principle: db already exists with different case already have: [SchoolDB] trying to create [schoolDB]
+2025-02-13 12:50:54 [ERROR]: Error adding Principle: db already exists with different case already have: [SchoolDB] trying to create [schoolDB]
+2025-02-13 12:52:54 [INFO]: Principle Mohan madhav Singhal added successfully
+2025-02-13 12:53:34 [INFO]: ✅ Successful login: 25030002
+2025-02-14 12:54:22 [INFO]: ✅ Successful login: 25030002
+2025-02-14 12:54:24 [INFO]: ✅ Successful login: 25030002
+2025-02-14 12:54:25 [INFO]: ✅ Successful login: 25030002
+2025-02-14 12:54:26 [INFO]: ✅ Successful login: 25030002
+2025-02-14 12:54:27 [INFO]: ✅ Successful login: 25030002
+2025-02-14 12:54:28 [ERROR]: ❌ Login error for 25030002: Too many login attempts. Please try again later.
+2025-02-14 16:37:16 [WARN]: No token found
+2025-02-14 16:37:21 [WARN]: No token found
+2025-02-14 16:37:29 [WARN]: No token found
+2025-02-14 16:37:56 [WARN]: No token found
+2025-02-14 16:38:01 [WARN]: No token found
+2025-02-14 16:38:11 [WARN]: No token found
+2025-02-14 16:38:29 [WARN]: No token found
+2025-02-14 16:38:34 [WARN]: No token found
+2025-02-14 16:38:47 [WARN]: No token found
+2025-02-14 16:38:52 [WARN]: No token found
+2025-02-14 16:40:02 [WARN]: No token found
+2025-02-14 16:40:49 [WARN]: No token found
+2025-02-14 16:44:04 [WARN]: No token found
+2025-02-14 16:44:09 [WARN]: No token found
+2025-02-14 16:44:14 [WARN]: No token found
+2025-02-14 16:44:19 [WARN]: No token found
+2025-02-14 16:44:24 [WARN]: No token found
+2025-02-14 16:44:29 [WARN]: No token found
+2025-02-14 16:44:34 [WARN]: No token found
+2025-02-14 16:44:39 [WARN]: No token found
+2025-02-14 16:44:44 [WARN]: No token found
+2025-02-14 16:58:19 [WARN]: No token found
+2025-02-14 16:58:24 [WARN]: No token found
+2025-02-14 16:58:29 [WARN]: No token found
+2025-02-14 16:58:34 [WARN]: No token found
+2025-02-14 16:58:39 [WARN]: No token found
+2025-02-14 16:58:44 [WARN]: No token found
+2025-02-14 16:58:49 [WARN]: No token found
+2025-02-14 16:58:54 [WARN]: No token found
+2025-02-14 16:58:59 [WARN]: No token found
+2025-02-14 16:59:04 [WARN]: No token found
+2025-02-14 16:59:09 [WARN]: No token found
+2025-02-14 16:59:14 [WARN]: No token found
+2025-02-14 16:59:19 [WARN]: No token found
+2025-02-14 16:59:24 [WARN]: No token found
+2025-02-14 16:59:29 [WARN]: No token found
+2025-02-14 16:59:34 [WARN]: No token found
+2025-02-14 16:59:39 [WARN]: No token found
+2025-02-14 16:59:44 [WARN]: No token found
+2025-02-14 16:59:49 [WARN]: No token found
+2025-02-14 16:59:54 [WARN]: No token found
+2025-02-14 16:59:59 [WARN]: No token found
+2025-02-14 17:00:04 [WARN]: No token found
