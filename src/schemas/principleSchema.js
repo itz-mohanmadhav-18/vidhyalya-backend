@@ -3,7 +3,8 @@ import {gql}  from "apollo-server";
 const principleDef = gql`
     
     type Principle {
-        EmployeeID: ID!
+        EmployeeID: ID @deprecated(reason: "Use '_id' instead")
+        _id: ID!
         name: String!
         dob: String!
         contact: String!
@@ -12,7 +13,6 @@ const principleDef = gql`
         Qualifications: [String!]!
         Experience: Int!
         dateOfJoining: String!
-        password: String!
     }
     type Token{
         token:String!
@@ -20,7 +20,7 @@ const principleDef = gql`
     
     type Query {
         principles: [Principle]!
-        principle(EmployeeID: ID!): Principle
+        principle(_id: ID!): Principle
         
     }
     
@@ -28,7 +28,7 @@ const principleDef = gql`
         addPrinciple(input:PrincipleInput!): Principle
         signInPrinciple(input:PrincipleSignInInput!): Token
         updatePrinciple(input:PrincipleUpdateInput!): Principle
-        deletePrinciple(employeeID: ID!): Principle
+        deletePrinciple(_id: ID!): Principle
     }
     
     input PrincipleInput {
@@ -44,6 +44,7 @@ const principleDef = gql`
     }
     
     input PrincipleUpdateInput {
+        _id: ID
         name: String
         dob: String
         contact: String
@@ -52,7 +53,7 @@ const principleDef = gql`
         Experience: Int
     }
     input PrincipleSignInInput {
-        EmployeeID: ID!
+        _id: ID!
         password: String!
     }
     

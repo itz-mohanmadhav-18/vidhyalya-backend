@@ -2,11 +2,9 @@ import mongoose from 'mongoose';
 
 // Define Schema
 const PrincipleSchema = new mongoose.Schema({
-    EmployeeID: {
+    _id: {
         type: String,
         required: true,
-        unique: true,
-        index: true
     },
 
     name: {
@@ -76,6 +74,8 @@ const PrincipleSchema = new mongoose.Schema({
         type:String,
         required:true
     }
+},{
+    _id: false
 });
 
 // Create Model

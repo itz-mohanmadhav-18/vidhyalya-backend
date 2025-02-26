@@ -13,3 +13,53 @@
 2025-02-13 12:50:08 [ERROR]: Error adding Principle: db already exists with different case already have: [SchoolDB] trying to create [schoolDB]
 2025-02-13 12:50:54 [ERROR]: Error adding Principle: db already exists with different case already have: [SchoolDB] trying to create [schoolDB]
 2025-02-14 12:54:28 [ERROR]: ❌ Login error for 25030002: Too many login attempts. Please try again later.
+2025-02-14 21:19:42 [ERROR]: ❌ Login error for 25030002: Cannot access 'input' before initialization
+2025-02-14 21:23:07 [ERROR]: ❌ Login error for 250300025: Invalid credentials
+2025-02-25 14:00:03 [ERROR]: Invalid token: jwt expired
+2025-02-25 14:00:07 [ERROR]: Invalid token: jwt expired
+2025-02-26 16:23:12 [ERROR]: Invalid token: jwt expired
+2025-02-26 16:23:17 [ERROR]: Invalid token: jwt expired
+2025-02-26 16:23:48 [ERROR]: Error fetching principles: Authentication required
+2025-02-26 19:02:48 [ERROR]: Invalid token: jwt expired
+2025-02-26 19:02:53 [ERROR]: Invalid token: jwt expired
+2025-02-26 19:02:58 [ERROR]: Invalid token: jwt expired
+2025-02-26 19:03:03 [ERROR]: Invalid token: jwt expired
+2025-02-26 19:03:08 [ERROR]: Invalid token: jwt expired
+2025-02-26 19:03:13 [ERROR]: Invalid token: jwt expired
+2025-02-26 19:03:18 [ERROR]: Invalid token: jwt expired
+2025-02-26 19:03:18 [ERROR]: Invalid token: jwt expired
+2025-02-26 19:03:23 [ERROR]: Invalid token: jwt expired
+2025-02-26 19:03:40 [ERROR]: Invalid token: jwt expired
+2025-02-26 19:03:42 [ERROR]: Invalid token: invalid token
+2025-02-26 19:03:44 [ERROR]: Invalid token: invalid token
+2025-02-26 19:03:45 [ERROR]: Invalid token: invalid token
+2025-02-26 19:03:50 [ERROR]: Invalid token: invalid token
+2025-02-26 19:03:55 [ERROR]: Invalid token: invalid token
+2025-02-26 19:04:00 [ERROR]: Invalid token: invalid token
+2025-02-26 19:04:05 [ERROR]: Invalid token: invalid token
+2025-02-26 19:04:10 [ERROR]: Invalid token: invalid token
+2025-02-26 19:04:15 [ERROR]: Invalid token: invalid token
+2025-02-26 19:04:18 [ERROR]: Invalid token: invalid token
+2025-02-26 19:04:20 [ERROR]: Invalid token: invalid token
+2025-02-26 19:04:41 [ERROR]: Invalid token: invalid token
+2025-02-26 19:05:07 [ERROR]: Invalid token: invalid token
+2025-02-26 19:05:12 [ERROR]: Invalid token: invalid token
+2025-02-26 19:05:17 [ERROR]: Invalid token: invalid token
+2025-02-26 19:05:20 [ERROR]: Invalid token: invalid token
+2025-02-26 19:05:22 [ERROR]: Invalid token: invalid token
+2025-02-26 19:05:36 [ERROR]: Invalid token: invalid token
+2025-02-26 19:05:40 [ERROR]: Invalid token: invalid token
+2025-02-26 19:05:41 [ERROR]: Invalid token: invalid token
+2025-02-26 19:06:03 [ERROR]: Error fetching principle 22050002: Access denied
+2025-02-26 19:06:47 [ERROR]: Error fetching principle 22030002: Access denied
+2025-02-26 19:07:34 [ERROR]: Error fetching principle 25030003: Principle with ID 25030003 not found
+2025-02-26 19:09:01 [ERROR]: Error fetching principle 25030003: Principle with ID 25030003 not found
+2025-02-26 19:09:23 [ERROR]: Error fetching principle 25030003: Principle with ID 25030003 not found
+2025-02-26 19:09:23 [ERROR]: Principle with ID 25030003 not found
+2025-02-26 19:11:46 [ERROR]: Error fetching principle 25030003: Principle with ID 25030003 not found
+2025-02-26 19:11:46 [ERROR]: Principle with ID 25030003 not found
+2025-02-26 19:12:46 [ERROR]: Error fetching principle 25030003: Principle with ID 25030003 not found
+2025-02-26 19:12:46 [ERROR]: Principle with ID 25030003 not found
+EmployeeNotFoundError: Principle with ID 25030003 not found
+    at Object.principle (file:///D:/vidhyalya-backend/src/resolvers/principleResolvers.js:70:27)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)

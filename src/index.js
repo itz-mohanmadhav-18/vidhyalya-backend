@@ -5,6 +5,7 @@ import resolvers from "./resolvers/index.js";
 import {connectDB} from "./db.js";
 import context from "./context.js";
 import {AppError} from "./utils/errors.js";
+import logger from "./utils/logger.js";
 
 console.log("🚀 Server script started");
 
@@ -20,31 +21,36 @@ async function startServer() {
             resolvers,
             introspection: true, // Enable introspection in server config
             includeStacktrace: process.env.NODE_ENV === 'development',
-            // formatError: (formattedError) => {
-            //     const err = formattedError.originalError;
-            //     console.error(`GraphQL Error: ${err instanceof AppError ? err.message : "Unexpected Error Occurred."}`);
-            //
-            //     if (err instanceof AppError) {
-            //         return {
-            //             message: err.message,
-            //             statusCode: err.statusCode || 500,
-            //             code: err.name,
-            //         };
-            //     }
-            //     if (formattedError.extensions?.code) {
-            //         return {
-            //             message: formattedError.message,
-            //             statusCode: formattedError.extensions?.code === 'INTERNAL_SERVER_ERROR' ? 500 : 400,
-            //             code: formattedError.extensions?.code,
-            //         }
-            //     }
-            //
-            //     return {
-            //         message: "Internal Server Error",
-            //         statusCode: 500,
-            //         code: "INTERNAL_SERVER_ERROR",
-            //     };
-            // },
+            formatError: (formattedError, error) => {
+                // Log the error
+                logger.error(error);
+
+                // If the error is an instance of our AppError class
+                if (error.originalError instanceof AppError) {
+                    // Return a properly formatted error with the correct code and status
+                    return {
+                        message: error.message,
+                        extensions: {
+                            code: error.originalError.name,
+                            statusCode: error.originalError.statusCode,
+                            // You can add additional fields if needed
+                            path: formattedError.path
+                        }
+                    };
+                }
+
+                // For unexpected errors, return a generic message in production
+                return {
+                    message: process.env.NODE_ENV === 'production'
+                        ? 'An unexpected error occurred'
+                        : error.message,
+                    extensions: {
+                        code: 'INTERNAL_SERVER_ERROR',
+                        statusCode: 500,
+                        path: formattedError.path
+                    }
+                };
+            }
         });
 
         console.log("🚀 Starting Apollo Server...");
@@ -57,7 +63,7 @@ async function startServer() {
             },
             cors: {
                 origin: "*",
-                methods:["POST"],
+                methods: ["POST"],
                 allowedHeaders: ["Content-Type", "Authorization"],
                 credentials: true,
             },

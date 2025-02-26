@@ -27,13 +27,17 @@
     "bcryptjs": "^2.4.3",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
+    "escape-string-regexp": "^5.0.0",
     "graphql": "^16.10.0",
     "graphql-shield": "^7.6.5",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
     "mongoose": "^8.9.5",
     "nodemon": "^3.1.9",
     "rate-limiter-flexible": "^5.0.5",
-    "winston": "^3.17.0"
+    "sanitize-html": "^2.14.0",
+    "winston": "^3.17.0",
+    "xss": "^1.0.15"
   }
 }

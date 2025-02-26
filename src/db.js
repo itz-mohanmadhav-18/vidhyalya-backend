@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import mongoose from "mongoose";
+import { DatabaseConnectionError } from "./utils/errors.js"
 
 // Get the current file path and directory
 const __filename = fileURLToPath(import.meta.url);
@@ -28,6 +29,7 @@ const connectDB = async () => {
         // Log the full error for debugging
         console.error("Full error:", error);
         process.exit(1);
+        throw new DatabaseConnectionError();
     }
 };
 

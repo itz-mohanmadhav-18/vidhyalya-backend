@@ -21,7 +21,7 @@ const context = async ({req}) => {
     }else{
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            const userID = decoded.StudentID|| decoded.EmployeeID  ;
+            const userID = decoded.StudentID|| decoded._id;
             if (!userID || userID.length < 8) {
                 throw new InvalidUserIDError();
             }
