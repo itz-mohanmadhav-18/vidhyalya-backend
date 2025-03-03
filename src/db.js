@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Load environment variables first, before any other operations
-dotenv.config({ path: join(__dirname, '../config.env') });
+dotenv.config({ path: join(__dirname, '../.env') });
 console.log(process.env.MONGO)
 const connectDB = async () => {
     try {

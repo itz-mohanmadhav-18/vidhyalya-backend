@@ -13,6 +13,11 @@ const StudentSchema = new mongoose.Schema({
         minlength: [3, 'Name must be at least 3 characters'],
         maxlength: [50, 'Name cannot exceed 50 characters']
     },
+    password: {
+        type: String,
+        required: [true, 'Password is required'],
+        minlength: [8, 'Password must be at least 8 characters']
+    },
     gender: {
         type: String,
         enum: ['male','female','others'],
@@ -31,7 +36,6 @@ const StudentSchema = new mongoose.Schema({
     contact: {
         type: String,
         required: [true, 'Contact number is required'],
-        unique: true,
         match: [/^\d{10}$/, 'Contact number must be exactly 10 digits']
     },
     email: {
@@ -91,12 +95,17 @@ const StudentSchema = new mongoose.Schema({
             },
             message: 'Admission Date must be in the past'
         }},
-    classCode: {
+    classID: {
         type: String,
         required: [true, 'Class Code is required'],
         trim: true,
-        ref: 'ClassCode'
+        ref: 'Classes'
     },
+    aadharNumber: {
+        type: String,
+        required: [true, 'Aadhar Number is required'],
+        match: [/^\d{12}$/, 'Aadhar Number must be exactly 12 digits']
+    }
 
 });
 

@@ -15,25 +15,26 @@ async function startServer() {
         await connectDB();
         console.log("✅ Database connected!");
 
+        // Force enable introspection
+        const enableIntrospection = true;
+        console.log(`🔍 Introspection is set to: ${enableIntrospection ? 'ENABLED' : 'DISABLED'}`);
+
         // Create Apollo Server instance
         const server = new ApolloServer({
             typeDefs,
             resolvers,
-            introspection: true, // Enable introspection in server config
+            introspection: enableIntrospection,
             includeStacktrace: process.env.NODE_ENV === 'development',
             formatError: (formattedError, error) => {
                 // Log the error
-                logger.error(error);
-
+                // console.error("GraphQL Error:", error);
                 // If the error is an instance of our AppError class
                 if (error.originalError instanceof AppError) {
-                    // Return a properly formatted error with the correct code and status
                     return {
                         message: error.message,
                         extensions: {
                             code: error.originalError.name,
                             statusCode: error.originalError.statusCode,
-                            // You can add additional fields if needed
                             path: formattedError.path
                         }
                     };
@@ -52,28 +53,34 @@ async function startServer() {
                 };
             }
         });
-
         console.log("🚀 Starting Apollo Server...");
 
         // Start server in standalone mode
         const {url} = await startStandaloneServer(server, {
-            listen: {port: 4000},
+            listen: {port: process.env.PORT || 4000},
             context: async ({req}) => {
+                // Special handling for introspection queries
+                const query = req.body?.query || '';
+                // if (query.includes('__schema') || query.includes('__type')) {
+                //     // console.log("🔍 Processing introspection query");
+                //     // return {}; // Return empty context for introspection
+                // }
+
+                // Normal context for other queries
                 return await context({req});
             },
             cors: {
                 origin: "*",
-                methods: ["POST"],
+                methods: ["GET", "POST"],
                 allowedHeaders: ["Content-Type", "Authorization"],
                 credentials: true,
             },
-            // Add these options for the standalone server
-            introspection: true,
         });
 
         console.log(`✅ Server ready at ${url}`);
+        console.log(`🔍 Introspection is ${enableIntrospection ? 'ENABLED' : 'DISABLED'}`);
     } catch (error) {
-        console.error("❌ Failed to start server:", error.message);
+        console.error("❌ Failed to start server:", error.stack);
         process.exit(1);
     }
 }
@@ -81,5 +88,5 @@ async function startServer() {
 startServer()
     .then(() => console.log("✅ Server started successfully"))
     .catch((error) => {
-        console.error("❌ Server failed to start:", error.message);
+        console.error("❌ Server failed to start:", error.stack);
     });

@@ -1,4 +1,4 @@
-import {gql}  from "apollo-server";
+import {gql}  from "graphql-tag";
 
 const principleDef = gql`
     
@@ -9,7 +9,7 @@ const principleDef = gql`
         dob: String!
         contact: String!
         email: String!
-        gender: String!
+        gender: Gender!
         Qualifications: [String!]!
         Experience: Int!
         dateOfJoining: String!
@@ -24,6 +24,12 @@ const principleDef = gql`
         
     }
     
+    enum Gender{
+        male
+        female
+        others
+    }
+    
     type Mutation {
         addPrinciple(input:PrincipleInput!): Principle
         signInPrinciple(input:PrincipleSignInInput!): Token
@@ -36,7 +42,7 @@ const principleDef = gql`
         dob: String!
         contact: String!
         email: String!
-        gender: String!
+        gender: Gender!
         Qualifications: [String]!
         Experience: Int!
         dateOfJoining: String!

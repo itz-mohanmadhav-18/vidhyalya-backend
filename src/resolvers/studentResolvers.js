@@ -1,6 +1,13 @@
 import GenerateIDsAndRolls from "./generateEmployeeIDsAndStudentNumbers.js";
 import bcrypt from 'bcryptjs';
 import logger from "../utils/logger.js";
+import {
+    studentSchema,
+    studentLoginSchema,
+    studentUpdateSchema,
+    updateStudentClassSchema,
+    changePasswordSchema
+} from "../validations/studentInputValidationSchema.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import mongoose from 'mongoose';
@@ -20,13 +27,15 @@ import {
     DatabaseQueryError
 } from "../utils/errors.js";
 import Student from "../models/Student.js";
+import Classes from "../models/classes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-dotenv.config({path: join(__dirname, '../../config.env')});
+dotenv.config({path: join(__dirname, '../../.env')});
 
-const ID = new GenerateIDsAndRolls();
-const generateClassCode= async (schoolCode,classGrade, classSection)=> {
+const ID = new GenerateIDsAndRolls();//Instance of GenerateIDsAndRolls class
+
+const generateClassCode = async (className, classSection) => {
     let classCodes = {
         'nursery': '01',
         'lkg': '02',
@@ -44,19 +53,259 @@ const generateClassCode= async (schoolCode,classGrade, classSection)=> {
         'eleventh': '14',
         'twelfth': '15',
     };
-    if (!classCodes[classGrade]) {
+    if (!classCodes[className]) {
         throw new Error('Invalid class grade');
     }
-    return `${schoolCode}${classCodes[classGrade]}${classSection}`;
+    return `${classCodes[className]}${classSection}`;
 }
 
 const studentResolvers = {
-    Query:{
-        allStudents: async (parent, args, context) => {
-
-        }
+    Query: {
+        // allStudents: async (parent, args, context) => {
+        //
+        // }
     },
-    resolvers:{
+    Mutation: {
+        addStudent: async (_, {input}, ctx) => {
+            try {
+                // Only admin can add a principle
+                // if (ctx.isAuthenticated && ctx.role !== 'admin') {
+                //     throw new PermissionDeniedError("Only administrators can add principles");
+                // }
 
+                //sanitise and standardize input
+                input.email = input.email.toLowerCase();
+                input.fatherEmail = input.fatherEmail.toLowerCase();
+                input = sanitizeInput(input);
+
+                //validate Input
+                const {error} = studentSchema.validate(input);
+                if (error) {
+                    throw new ValidationError(error.details[0].message);
+                }
+                //check if student already exists
+                const existingStudent = await Student.findOne({
+                    aadharNumber: input.aadharNumber,
+                });
+
+
+                if (existingStudent) {
+                    throw new DuplicateEntryError('Student already exists with this aadhar Card number');
+                }
+
+                //format date
+                const formattedDob = new Date(input.dob);
+                const formattedAdmissionDate = new Date(input.admissionDate);
+
+                if (isNaN(formattedDob.getTime()) || isNaN(formattedAdmissionDate.getTime())) {
+                    throw new ValidationError('Invalid date format');
+                }
+
+                //verify class exists
+                const classID = await generateClassCode(input.className, input.classSection);
+                const classExists = await Classes.findOne({_id: classID});
+                if (!classExists) {
+                    throw new DatabaseQueryError('Class does not exist');
+                }
+
+                //Generate student ID and hash password
+                const salt_rounds = 12;
+                const hashedPassword = await bcrypt.hash(input.dob, salt_rounds);
+                const id = await ID.generateStudentID(input.className);
+
+
+                const newStudent = new Student({
+                    ...input,
+                    _id: id,
+                    password: hashedPassword,
+                    dob: formattedDob,
+                    classID: classID,
+                    admissionDate: formattedAdmissionDate,
+                });
+
+                await newStudent.save();
+
+                try {
+                    await Classes.findByIdAndUpdate(
+                        classID, {
+                            $push: {enrolledStudents: id},
+                            $inc: {studentsCount: 1}
+                        }, {new: true});
+
+                    logger.info(`Student ${newStudent.name} added successfully by ${ctx.role} ${ctx.userID}`);
+                    return newStudent;
+                } catch (error) {
+                    try {
+                        await Student.findByIdAndDelete(id);
+                    } catch (rollbackError) {
+                        logger.error(`Failed to rollback student creation after class update failed: ${rollbackError.message}`);
+                    }
+                    throw error;
+                }
+            } catch (error) {
+                logger.error(`Error adding Student: ${error.message}`);
+
+                if (error instanceof AppError) {
+                    throw error;
+                }
+
+                throw new InternalServerError(`Failed to add Student: ${error.message}`);
+            }
+
+        },
+        updateStudent: async (_, {input}, ctx) => {
+            try {
+                // Only admin can update a student
+                // if (ctx.isAuthenticated && ctx.role !== 'admin') {
+                //     throw new PermissionDeniedError("Only administrators can update students");
+                // }
+
+                //sanitise and standardize input
+                input.email = input.email.toLowerCase();
+                input.fatherEmail = input.fatherEmail.toLowerCase();
+                input = sanitizeInput(input);
+
+                //validate Input
+                const {error} = studentUpdateSchema.validate(input);
+                if (error) {
+                    throw new ValidationError(error.details[0].message);
+                }
+
+                //check if student exists
+                const existingStudent = await Student.findById(input._id);
+                if (!existingStudent) {
+                    throw new EmployeeNotFoundError('Student not found');
+                }
+
+                //format date
+                const formattedDob = new Date(input.dob);
+                const formattedAdmissionDate = new Date(input.admissionDate);
+
+                if (isNaN(formattedDob.getTime()) || isNaN(formattedAdmissionDate.getTime())) {
+                    throw new ValidationError('Invalid date format');
+                }
+
+                //verify class exists
+                const classID = await generateClassCode(input.className, input.classSection);
+                const classExists = await Classes.findOne({_id: classID});
+                if (!classExists) {
+                    throw new DatabaseQueryError('Class does not exist');
+                }
+
+                //update student
+                const updatedStudent = await Student.findByIdAndUpdate(input._id, {
+                    ...input,
+                    dob: formattedDob,
+                    admissionDate: formattedAdmissionDate,
+                    classID: classID
+                }, {new: true});
+
+                logger.info(`Student ${updatedStudent.name} updated successfully by ${ctx.role} ${ctx.userID}`);
+                return updatedStudent;
+
+            } catch (error) {
+                logger.error(`Error updating Student: ${error.message}`);
+
+                if (error instanceof AppError) {
+                    throw error;
+                }
+
+                throw new InternalServerError(`Failed to update Student: ${error.message}`);
+            }
+        },
+        loginStudent: async (_, {input}, ctx) => {
+            try {
+                //sanitise and standardize input
+                input._id = input._id.toLowerCase();
+                input = sanitizeInput(input);
+
+                //validate Input
+                const {error} = studentLoginSchema.validate(input);
+                if (error) {
+                    throw new ValidationError(error.details[0].message);
+                }
+
+                //check if student exists
+                const existingStudent = await Student.findById(input._id);
+                if (!existingStudent) {
+                    throw new EmployeeNotFoundError('Student not found');
+                }
+
+                //verify password
+                const isPasswordValid = await bcrypt.compare(input.password, existingStudent.password);
+                if (!isPasswordValid) {
+                    throw new AuthError('Invalid credentials');
+                }
+
+                //generate token
+                const token = jwt.sign({
+                    _id: existingStudent._id,
+                    role: 'student'
+                }, process.env.JWT_SECRET, {expiresIn: '1h'});
+
+                logger.info(`Student ${existingStudent.name} logged in successfully`);
+                return {token};
+
+            } catch (error) {
+                logger.error(`Error logging in Student: ${error.message}`);
+
+                if (error instanceof AppError) {
+                    throw error;
+                }
+
+                throw new InternalServerError(`Failed to login Student: ${error.message}`);
+            }
+
+        },
+        deleteStudent: async (_, {id}, ctx) => {
+            try {
+                // Only admin can delete a student
+                // if (ctx.isAuthenticated && ctx.role !== 'admin') {
+                //     throw new PermissionDeniedError("Only administrators can delete students");
+                // }
+
+                //check if student exists
+                const existingStudent = await Student.findById(id);
+                if (!existingStudent) {
+                    throw new EmployeeNotFoundError('Student not found');
+                }
+
+                //delete student
+                await Student.findByIdAndDelete(id);
+                await Classes.findByIdAndUpdate(
+                    existingStudent.classID, {
+                        $pull: {enrolledStudents: id},
+                        $inc: {studentsCount: -1}
+                    });
+
+                logger.info(`Student ${existingStudent.name} deleted successfully by ${ctx.role} ${ctx.userID}`);
+                return existingStudent;
+
+            } catch (error) {
+                logger.error(`Error deleting Student: ${error.message}`);
+
+                if (error instanceof AppError) {
+                    throw error;
+                }
+
+                throw new InternalServerError(`Failed to delete Student: ${error.message}`);
+            }
+
+
+        },
+
+
+    },
+    Student: {
+        class: async (parent) => {
+            try {
+                return await Classes.findById(parent.classID);
+            } catch (e) {
+                logger.error(e);
+                return null;
+            }
+        }
     }
 }
+
+export default studentResolvers;

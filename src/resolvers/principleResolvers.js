@@ -28,7 +28,7 @@ import {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-dotenv.config({path: join(__dirname, '../../config.env')});
+dotenv.config({path: join(__dirname, '../../.env')});
 
 const ID = new GenerateIDsAndRolls();
 
@@ -83,14 +83,11 @@ const PrincipleResolvers = {
 
     Mutation: {
         addPrinciple: async (_, {input}, ctx) => {
-            const session = await mongoose.startSession();
-            session.startTransaction();
-
             try {
                 // Only admin can add a principle
-                if (ctx.isAuthenticated && ctx.role !== 'admin') {
-                    throw new PermissionDeniedError("Only administrators can add principles");
-                }
+                // if (ctx.isAuthenticated && ctx.role !== 'admin') {
+                //     throw new PermissionDeniedError("Only administrators can add principles");
+                // }
 
                 input.email = input.email.toLowerCase();
                 input = sanitizeInput(input);
@@ -127,23 +124,19 @@ const PrincipleResolvers = {
                     dateOfJoining: formattedDateOfJoining
                 });
 
-                await newPrinciple.save({ session });
-                await session.commitTransaction();
+                await newPrinciple.save();
 
-                logger.info(`Principle ${newPrinciple.name} added successfully`);
+                logger.info(`Principle ${newPrinciple.name} added successfully by ${ctx.role} ${ctx.userID}`);
                 return newPrinciple;
             } catch (error) {
-                await session.abortTransaction();
                 logger.error(`Error adding Principle: ${error.message}`);
 
                 if (error instanceof AppError) {
                     throw error;
                 }
 
-                throw new InternalServerError(`Failed to add principle: ${error.message}`);
-            } finally {
-                session.endSession();
-            }
+                throw new InternalServerError(`Failed to add principle: ${error.message}`);}
+
         },
 
         signInPrinciple: async (_, {input}) => {
@@ -201,8 +194,7 @@ const PrincipleResolvers = {
         },
 
         updatePrinciple: async (_, {input}, ctx) => {
-            const session = await mongoose.startSession();
-            session.startTransaction();
+
 
             try {
                 if (!ctx.isAuthenticated) {
@@ -266,11 +258,9 @@ const PrincipleResolvers = {
                     throw new EmployeeNotFoundError("Error updating Principle");
                 }
 
-                await session.commitTransaction();
-                logger.info(`✅ Principle ${updatedPrinciple.name} updated successfully`);
+                logger.info(`✅ Principle ${updatedPrinciple.name} updated successfully by ${ctx.role} ${ctx.userID}`);
                 return updatedPrinciple;
             } catch (error) {
-                await session.abortTransaction();
                 logger.error(`❌ Error updating Principle: ${error.message}`);
 
                 if (error instanceof AppError) {
@@ -278,14 +268,10 @@ const PrincipleResolvers = {
                 }
 
                 throw new InternalServerError(`Failed to update principle: ${error.message}`);
-            } finally {
-                session.endSession();
             }
         },
 
         deletePrinciple: async (_, {_id}, ctx) => {
-            const session = await mongoose.startSession();
-            session.startTransaction();
 
             try {
                 if (!ctx.isAuthenticated) {
@@ -306,12 +292,9 @@ const PrincipleResolvers = {
                 if (!deletedPrinciple) {
                     throw new DatabaseQueryError("Failed to delete principle");
                 }
-
-                await session.commitTransaction();
-                logger.info(`✅ Principle ${deletedPrinciple.name} deleted successfully`);
+                logger.info(`✅ Principle ${deletedPrinciple.name} deleted successfully by ${ctx.role} ${ctx.userID}`);
                 return deletedPrinciple;
             } catch (error) {
-                await session.abortTransaction();
                 logger.error(`❌ Error deleting Principle ${_id}: ${error.message}`);
 
                 if (error instanceof AppError) {
@@ -319,9 +302,8 @@ const PrincipleResolvers = {
                 }
 
                 throw new InternalServerError(`Failed to delete principle: ${error.message}`);
-            } finally {
-                session.endSession();
             }
+
         },
     },
 
