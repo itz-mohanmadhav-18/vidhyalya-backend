@@ -3,3 +3,5 @@ node_modules
 environment.json
 
 .env
+*.log
+qodana.yaml

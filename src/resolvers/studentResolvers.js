@@ -68,9 +68,9 @@ const studentResolvers = {
     Mutation: {
         addStudent: async (_, {input}, ctx) => {
             try {
-                // Only admin can add a principle
+                // Only admin can add a Student
                 // if (ctx.isAuthenticated && ctx.role !== 'admin') {
-                //     throw new PermissionDeniedError("Only administrators can add principles");
+                //     throw new PermissionDeniedError("Only administrators can add student");
                 // }
 
                 //sanitise and standardize input

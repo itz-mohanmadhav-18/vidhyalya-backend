@@ -2,7 +2,7 @@ import PrincipleResolvers from "./principleResolvers.js";
 import TeacherResolvers from "./teacherResolvers.js";
 import StudentResolvers from "./studentResolvers.js";
 import ClassResolvers from "./classResolvers.js";
-
+import AdminResolvers from "./adminResolvers.js";
 const resolvers = {
     Query: {
         ...PrincipleResolvers.Query,
@@ -14,7 +14,8 @@ const resolvers = {
         ...PrincipleResolvers.Mutation,
         ...TeacherResolvers.Mutation,
         ...StudentResolvers.Mutation,
-        ...ClassResolvers.Mutation
+        ...ClassResolvers.Mutation,
+        ...AdminResolvers.Mutation,
     },
     Principle: {
         ...PrincipleResolvers.Principle,

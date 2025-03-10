@@ -27,7 +27,7 @@ async function startServer() {
             includeStacktrace: process.env.NODE_ENV === 'development',
             formatError: (formattedError, error) => {
                 // Log the error
-                // console.error("GraphQL Error:", error);
+                console.error("GraphQL Error:", error);
                 // If the error is an instance of our AppError class
                 if (error.originalError instanceof AppError) {
                     return {
