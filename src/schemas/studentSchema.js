@@ -22,9 +22,10 @@ const studentDef = gql`
     }
     
     extend type Query {
-        student(_id: ID!): Student
+        studentByID(_id: ID!): Student
         students: [Student!]!
         studentsByClass(classID: ID!): [Student!]!
+        studentsByAdmissionDate(admissionDate: String!): [Student!]!
     }
     
     extend type Mutation {

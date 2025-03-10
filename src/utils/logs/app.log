@@ -113,3 +113,44 @@
 2025-03-01 13:53:37 [ERROR]: Error adding Student: Class does not exist
 2025-03-01 13:53:45 [INFO]: Student John Doe added successfully by unknown null
 2025-03-01 13:58:12 [ERROR]: Error adding Student: Student already exists with this aadhar Card number
+2025-03-10 12:17:58 [INFO]: Principle Leema Warghese added successfully by unknown null
+2025-03-10 12:18:33 [ERROR]: Error adding Principle: User already exists with this email or contact
+2025-03-10 12:20:01 [INFO]: ✅ Successful login: 25030002
+2025-03-10 12:47:56 [ERROR]: Error adding Student: Class does not exist
+2025-03-10 12:48:10 [INFO]: Student Aarav Sharma added successfully by principle 25030002
+2025-03-10 12:49:50 [INFO]: Student Rohan Verma added successfully by principle 25030002
+2025-03-10 12:50:14 [INFO]: Student Simran Kaur added successfully by principle 25030002
+2025-03-10 12:50:37 [INFO]: Student Aryan Patel added successfully by principle 25030002
+2025-03-10 12:50:59 [INFO]: Student Neha Sharma added successfully by principle 25030002
+2025-03-10 12:54:02 [INFO]: Student Rahul Yadav added successfully by principle 25030002
+2025-03-10 12:54:31 [INFO]: Student Pooja Reddy added successfully by principle 25030002
+2025-03-10 12:55:02 [INFO]: Student Vikram Singh added successfully by principle 25030002
+2025-03-10 12:57:32 [INFO]: Student Aryan Verma added successfully by principle 25030002
+2025-03-10 12:57:59 [INFO]: Student Sanya Mehta added successfully by principle 25030002
+2025-03-10 13:00:21 [ERROR]: Error updating Student: Cannot read properties of undefined (reading 'toLowerCase')
+2025-03-10 13:03:36 [ERROR]: Error updating Student: Cannot read properties of undefined (reading 'toLowerCase')
+2025-03-10 13:04:33 [ERROR]: Error updating Student: Invalid date format
+2025-03-10 13:06:27 [ERROR]: Error updating Student: Invalid date format
+2025-03-10 13:06:45 [ERROR]: Error updating Student: Cannot access 'formattedDob' before initialization
+2025-03-10 13:07:37 [ERROR]: Error updating Student: Cannot access 'formattedAdmissionDate' before initialization
+2025-03-10 13:10:07 [ERROR]: Error updating Student: Cannot access 'formattedAdmissionDate' before initialization
+2025-03-10 13:10:42 [ERROR]: Error updating Student: Invalid date format
+2025-03-10 13:11:12 [ERROR]: Error updating Student: Invalid date format
+2025-03-10 13:16:00 [ERROR]: Error updating Student: Invalid date format
+2025-03-10 13:16:50 [ERROR]: Error updating Student: Invalid date format
+2025-03-10 13:16:56 [ERROR]: Error updating Student: Invalid date format
+2025-03-10 13:17:20 [ERROR]: Error updating Student: Invalid date format
+2025-03-10 13:17:41 [ERROR]: Error updating Student: Invalid date format
+2025-03-10 13:26:41 [INFO]: ✅ Successful login: 25030002
+2025-03-10 13:31:21 [ERROR]: Error fetching students: Authentication Required
+2025-03-10 13:31:35 [INFO]: ✅ Successful login: 25030002
+2025-03-10 13:40:43 [ERROR]: Error fetching student 251200: Invalid student ID format
+2025-03-10 13:40:50 [ERROR]: Error fetching student 2512000005: Invalid student ID format
+2025-03-10 13:40:53 [ERROR]: Error fetching student 2512000005: Invalid student ID format
+2025-03-10 13:40:55 [ERROR]: Error fetching student 2512000005: Invalid student ID format
+2025-03-10 13:41:02 [ERROR]: Error fetching student 2512000005: Invalid student ID format
+2025-03-10 13:41:08 [ERROR]: Error fetching student 2512000007: Invalid student ID format
+2025-03-10 13:41:27 [INFO]: ✅ Successful login: 25030002
+2025-03-10 13:41:53 [ERROR]: Error fetching student 2512000007: Invalid student ID format
+2025-03-10 13:42:29 [ERROR]: Error fetching student 2512000001: Invalid student ID format
+2025-03-10 13:42:53 [ERROR]: Error fetching student 2512000001: Invalid student ID format

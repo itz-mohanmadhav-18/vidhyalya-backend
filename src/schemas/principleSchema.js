@@ -62,7 +62,7 @@ const principleDef = gql`
         _id: ID!
         password: String!
     }
-    
+
 `;
 
 export default principleDef;

@@ -24,7 +24,8 @@ import {
     InvalidTokenError,
     AppError,
     InternalServerError,
-    DatabaseQueryError
+    DatabaseQueryError,
+    StudentNotFoundError
 } from "../utils/errors.js";
 import Student from "../models/Student.js";
 import Classes from "../models/classes.js";
@@ -61,17 +62,99 @@ const generateClassCode = async (className, classSection) => {
 
 const studentResolvers = {
     Query: {
-        // allStudents: async (parent, args, context) => {
-        //
-        // }
+        studentByID: async (_, { _id }, ctx) => {
+            try{
+                if(!ctx.isAuthenticated){
+                    throw new AuthError("Authentication required")
+                }
+                if (ctx.role !== 'admin' && ctx.role !== 'principle') {
+                    throw new PermissionDeniedError("Access denied");
+                }
+                //todo : Student can view its profile only
+                _id = sanitizeInput(_id);
+                const student = Student.findById(_id); 
+                if(!student){
+                    throw new StudentNotFoundError(`Student with ID ${_id} not found`)
+                }
+                return student;
+            }
+            catch (error) {
+                logger.error(`Error fetching student ${_id}: ${error.message}`);
+                if (error instanceof AppError) {
+                    throw error;
+                }
+                throw new DatabaseQueryError(`Failed to fetch student: ${error.message}`);
+            }
+        },
+        students: async (_, __, ctx) => {
+            try{
+                if(!ctx.isAuthenticated){
+                    throw new AuthError("Authentication Required")
+                }
+                if (ctx.role !== 'admin' && ctx.role !== 'principle') {
+                    throw new PermissionDeniedError("Access denied");
+                }
+                // add logger.info
+                return await Student.find();
+            }
+            catch(error){
+                logger.error(`Error fetching students: ${error.message}`);
+                if (error instanceof AppError) {
+                    throw error;
+                }
+                throw new DatabaseQueryError(`Failed to fetch students: ${error.message}`);
+            }
+        },
+        studentsByClass: async (_, { classID }, ctx) => {
+            try{
+                if(!ctx.isAuthenticated){
+                    throw new AuthError("Authentication Required")
+                }
+                if (ctx.role !== 'admin' && ctx.role !== 'principle' && ctx.role !== 'teacher') {
+                    throw new PermissionDeniedError("Access denied");
+                }
+                classID = sanitizeInput(classID);
+                //class schema has array of students ids so use that to increase efficiency
+                return await Student.find({classID: classID});
+            }
+            catch(error){
+                logger.error(`Error fetching students by class ${classID}: ${error.message}`);
+                if (error instanceof AppError) {
+                    throw error;
+                }
+                throw new DatabaseQueryError(`Failed to fetch students by classID: ${error.message}`);
+            }
+        },
+        studentsByAdmissionDate: async (_, { admissionDate }, ctx) => {
+            try{
+                if(!ctx.isAuthenticated){
+                    throw new AuthError("Authentication Required");
+                }
+                if (ctx.role !== 'admin' && ctx.role !== 'principle') {
+                    throw new PermissionDeniedError("Access denied");
+                }
+                admissionDate = sanitizeInput(admissionDate);
+                const formattedAdmissionDate = new Date(admissionDate);
+                if (isNaN(formattedAdmissionDate.getTime())) {
+                    throw new ValidationError("Invalid admission date format");
+                }
+                return await Student.find({ admissionDate: formattedAdmissionDate });
+            }catch(error){
+                logger.error(`Error fetching students by admission date: ${error.message}`);
+                if (error instanceof AppError) {
+                    throw error;
+                }
+                throw new DatabaseQueryError(`Failed to fetch students by admission Date: ${error.message}`);
+            }
+        },//studentsByAge
     },
     Mutation: {
         addStudent: async (_, {input}, ctx) => {
             try {
                 // Only admin can add a principle
-                // if (ctx.isAuthenticated && ctx.role !== 'admin') {
-                //     throw new PermissionDeniedError("Only administrators can add principles");
-                // }
+                if (ctx.isAuthenticated && ctx.role !== 'admin') {
+                    throw new PermissionDeniedError("Only administrators can add principles");
+                }
 
                 //sanitise and standardize input
                 input.email = input.email.toLowerCase();
@@ -156,13 +239,17 @@ const studentResolvers = {
         updateStudent: async (_, {input}, ctx) => {
             try {
                 // Only admin can update a student
-                // if (ctx.isAuthenticated && ctx.role !== 'admin') {
-                //     throw new PermissionDeniedError("Only administrators can update students");
-                // }
+                if (ctx.isAuthenticated && ctx.role !== 'admin') {
+                    throw new PermissionDeniedError("Only administrators can update students");
+                }
 
                 //sanitise and standardize input
+                if(input.email)
                 input.email = input.email.toLowerCase();
+
+                if(input.fatherEmail)
                 input.fatherEmail = input.fatherEmail.toLowerCase();
+
                 input = sanitizeInput(input);
 
                 //validate Input
@@ -260,9 +347,9 @@ const studentResolvers = {
         deleteStudent: async (_, {id}, ctx) => {
             try {
                 // Only admin can delete a student
-                // if (ctx.isAuthenticated && ctx.role !== 'admin') {
-                //     throw new PermissionDeniedError("Only administrators can delete students");
-                // }
+                if (ctx.isAuthenticated && ctx.role !== 'admin') {
+                    throw new PermissionDeniedError("Only administrators can delete students");
+                }
 
                 //check if student exists
                 const existingStudent = await Student.findById(id);

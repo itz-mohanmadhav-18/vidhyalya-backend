@@ -5,7 +5,7 @@ import logger from "../utils/logger.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import mongoose from 'mongoose';
-import {
+import {  
     principleSchema,
     principleInputSignInSchema,
     principleUpdateInputSchema
