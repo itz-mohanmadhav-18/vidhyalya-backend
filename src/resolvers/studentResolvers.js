@@ -106,18 +106,23 @@ const studentResolvers = {
             }
         },
         studentsByClass: async (_, { classID }, ctx) => {
-            try{
-                if(!ctx.isAuthenticated){
-                    throw new AuthError("Authentication Required")
+            try {
+                if (!ctx.isAuthenticated) {
+                    throw new AuthError("Authentication Required");
                 }
-                if (ctx.role !== 'admin' && ctx.role !== 'principle' && ctx.role !== 'teacher') {
+                if (ctx.role !== 'admin' && ctx.role !== 'principal' && ctx.role !== 'teacher') {
                     throw new PermissionDeniedError("Access denied");
                 }
                 classID = sanitizeInput(classID);
-                //class schema has array of students ids so use that to increase efficiency
-                return await Student.find({classID: classID});
-            }
-            catch(error){
+                const classData = await Classes.findById(classID).lean();
+                if (!classData) {
+                    throw new DatabaseQueryError("Class not found");
+                }
+                if (!classData.enrolledStudents || classData.enrolledStudents.length === 0) {
+                    return [];
+                }
+                return await Student.find({ _id: { $in: classData.enrolledStudents } }).lean();
+            } catch (error) {
                 logger.error(`Error fetching students by class ${classID}: ${error.message}`);
                 if (error instanceof AppError) {
                     throw error;
