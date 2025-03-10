@@ -131,3 +131,5 @@
 2025-03-10 13:41:53 [ERROR]: Error fetching student 2512000007: Invalid student ID format
 2025-03-10 13:42:29 [ERROR]: Error fetching student 2512000001: Invalid student ID format
 2025-03-10 13:42:53 [ERROR]: Error fetching student 2512000001: Invalid student ID format
+2025-03-04 10:24:52 [ERROR]: Error adding Student: Class does not exist
+2025-03-04 14:28:08 [ERROR]: Error adding Student: Student already exists with this aadhar Card number
