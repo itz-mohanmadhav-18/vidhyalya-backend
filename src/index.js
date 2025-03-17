@@ -25,6 +25,7 @@ async function startServer() {
             resolvers,
             introspection: enableIntrospection,
             includeStacktrace: process.env.NODE_ENV === 'development',
+            csrfPrevention:false,
             formatError: (formattedError, error) => {
                 // Log the error
                 console.error("GraphQL Error:", error);
