@@ -10,7 +10,6 @@ import {
 } from "../validations/studentInputValidationSchema.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import mongoose from 'mongoose';
 import {dirname, join} from "path";
 import {fileURLToPath} from "url";
 import {limitRequest} from "../utils/rateLimitter.js";

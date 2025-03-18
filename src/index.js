@@ -16,7 +16,7 @@ async function startServer() {
         console.log("✅ Database connected!");
 
         // Force enable introspection
-        const enableIntrospection = true;
+        const enableIntrospection = process.env.NODE_ENV === "development"? true : false;
         console.log(`🔍 Introspection is set to: ${enableIntrospection ? 'ENABLED' : 'DISABLED'}`);
 
         // Create Apollo Server instance
